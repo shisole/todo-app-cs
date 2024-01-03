@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using FluentValidation;
 using MyWebApi;
 
 namespace MyWebApi {
@@ -9,7 +10,9 @@ namespace MyWebApi {
                 .AddSwaggerGen()
                 .AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList"))
                 .AddDatabaseDeveloperPageExceptionFilter()
-                .AddAutoMapper(typeof(MappingConfig));
+                .AddAutoMapper(typeof(MappingConfig))
+                .AddValidatorsFromAssemblyContaining<Program>()
+                ;
         }
 
         public static void RegisterMiddlewares (this WebApplication app) {
