@@ -3,7 +3,8 @@ namespace MyWebApi {
         public static void RegisterTodoService(this WebApplication app) {
 
             var todoService = new TodoService();
-            var todoItems = app.MapGroup("/todoitems");
+            var todoItems = app
+                .MapGroup("/api/todoitems");
 
             todoItems.MapGet("/", todoService.GetAllTodos)
                 .WithName("GetAllTodos")

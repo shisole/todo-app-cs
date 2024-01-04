@@ -8,7 +8,7 @@ namespace MyWebApi {
         public async Task<IResult> GetAllTodos(TodoDb db)
         {
             ApiResponse response = new ApiResponse {
-                Result = await db.Todos.Select(todo => new TodoItemDTO(todo)).ToArrayAsync(),
+                Result = await db.Todos.Select(todo => new TodoItemDto(todo)).ToArrayAsync(),
                 StatusCode = HttpStatusCode.OK
             };
             
@@ -39,17 +39,17 @@ namespace MyWebApi {
 
             ApiResponse response = new ApiResponse {
                 Result = await db.Todos.Where(todo => todo.IsComplete)
-                            .Select((todo) => new TodoItemDTO(todo))
+                            .Select((todo) => new TodoItemDto(todo))
                             .ToListAsync(),
                 StatusCode = HttpStatusCode.OK
             };
             return TypedResults.Ok(response);
         }
 
-        public async Task<IResult> CreateTodo(IValidator <TodoItemDTO> _validation, IMapper _mapper, TodoItemDTO todoItemDto, TodoDb db)
+        public async Task<IResult> CreateTodo(IValidator <CreateTodoItemDto> _validation, IMapper _mapper, CreateTodoItemDto createTodoItemDto, TodoDb db)
         {
             ApiResponse response = new ApiResponse {};
-            var validatedResult = await _validation.ValidateAsync(todoItemDto);
+            var validatedResult = await _validation.ValidateAsync(createTodoItemDto);
             if (!validatedResult.IsValid) {
                 response.IsSuccess = false;
                 response.StatusCode = HttpStatusCode.BadRequest;
@@ -57,13 +57,13 @@ namespace MyWebApi {
                 return Results.BadRequest(response);
             }
 
-            Todo todo = _mapper.Map<Todo>(todoItemDto);
+            Todo todo = _mapper.Map<Todo>(createTodoItemDto);
 
             db.Todos.Add(todo);
 
             await db.SaveChangesAsync();
 
-            TodoItemDTO todoItem = _mapper.Map<TodoItemDTO>(todo);
+            TodoItemDto todoItem = _mapper.Map<TodoItemDto>(todo);
 
             response.Result = todoItem;
             response.StatusCode = HttpStatusCode.Created;
@@ -73,7 +73,7 @@ namespace MyWebApi {
             // return TypedResults.CreatedAtRoute("GetTodo", new { id = todoItem.Id }, todoItem);
         }
 
-        public async Task<IResult> UpdateTodo(int id, TodoItemDTO inputTodoItemDto, TodoDb db)
+        public async Task<IResult> UpdateTodo(int id, TodoItemDto inputTodoItemDto, TodoDb db)
         {
             ApiResponse response = new ApiResponse {};
             var todo = await db.Todos.FindAsync(id);
