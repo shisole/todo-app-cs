@@ -9,6 +9,7 @@ namespace MyWebApi {
                 .AddEndpointsApiExplorer()
                 .AddSwaggerGen()
                 .AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList"))
+                .AddDbContext<UserDb>(opt => opt.UseInMemoryDatabase("UserList"))
                 .AddDatabaseDeveloperPageExceptionFilter()
                 .AddAutoMapper(typeof(MappingConfig))
                 .AddValidatorsFromAssemblyContaining<Program>()
@@ -29,6 +30,7 @@ namespace MyWebApi {
         public static void ConfigureServices(this WebApplication app) {
             // Todo service
             app.RegisterTodoService();
+            app.RegisterUserService();
         }
 
     }
